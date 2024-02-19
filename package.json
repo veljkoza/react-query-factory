@@ -1,7 +1,7 @@
 {
   "name": "react-query-factory",
-  "version": "0.0.38",
-  "description": "react-query-factory create modern React libraries using Rollup.",
+  "version": "0.0.39",
+  "description": "Create API client for your React app with just one line of code, using React Query!",
   "main": "dist/cjs/bundle.js",
   "module": "dist/esm/bundle.js",
   "types": "dist/index.d.ts",
@@ -18,14 +18,19 @@
     "type": "git",
     "url": "git+https://github.com/veljkoza/react-query-factory.git"
   },
-  "author": "veljkoza",
+  "author": "Veljko Sekulic <veljko.sekulic@mail.com>, @veljkoza, v-sekulic",
   "license": "MIT",
   "keywords": [
-    "react-template",
-    "react-library",
-    "typescript",
+    "tanstack",
+    "react-query",
+    "react query",
     "react",
-    "template"
+    "api",
+    "react-api",
+    "react api layer",
+    "server state management",
+    "javascript",
+    "typescript"
   ],
   "bugs": {
     "url": "https://github.com/veljkoza/react-query-factory/issues"
