@@ -1,3 +1,3 @@
-export * from './create-queries-from-service';
-export * from './create-use-mutation';
-export * from './create-use-query';
+export * from './lib/create-queries-from-service';
+export * from './lib/create-use-mutation';
+export * from './lib/create-use-query';
