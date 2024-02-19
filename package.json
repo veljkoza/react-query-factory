@@ -13,7 +13,7 @@
     "dev": "rollup -c -w",
     "test": "jest",
     "lint": "eslint src",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
