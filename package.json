@@ -1,31 +1,24 @@
 {
-  "name": "@MidoAhmed/rollup-react-library-starter",
-  "version": "0.1.0",
-  "description": "Template and quick-starter to create modern React libraries using Rollup.",
+  "name": "react-query-factory",
+  "version": "0.0.38",
+  "description": "react-query-factory create modern React libraries using Rollup.",
   "main": "dist/cjs/bundle.js",
   "module": "dist/esm/bundle.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/MidoAhmed"
-  },
   "scripts": {
     "build": "rimraf dist && rollup -c",
     "dev": "rollup -c -w",
     "test": "jest",
-    "lint": "eslint src",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "predeploy-storybook": "npm run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MidoAhmed/rollup-react-library-starter.git"
+    "url": "git+https://github.com/veljkoza/react-query-factory.git"
   },
-  "author": "MidoAhmed",
+  "author": "veljkoza",
   "license": "MIT",
   "keywords": [
     "react-template",
@@ -35,11 +28,11 @@
     "template"
   ],
   "bugs": {
-    "url": "https://github.com/MidoAhmed/rollup-react-library-starter/issues"
+    "url": "https://github.com/veljkoza/react-query-factory/issues"
   },
-  "homepage": "https://MidoAhmed.github.io/rollup-react-library-starter",
+  "homepage": "https://veljkoza.github.io/react-query-factory",
   "peerDependencies": {
-    "antd": "^5.4.0",
+    "@tanstack/react-query": "*",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
@@ -52,14 +45,6 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.0",
     "@rollup/plugin-typescript": "^11.1.0",
-    "@storybook/addon-essentials": "^7.0.2",
-    "@storybook/addon-interactions": "^7.0.2",
-    "@storybook/addon-links": "^7.0.2",
-    "@storybook/blocks": "^7.0.2",
-    "@storybook/preset-scss": "^1.0.3",
-    "@storybook/react": "^7.0.2",
-    "@storybook/react-webpack5": "^7.0.2",
-    "@storybook/testing-library": "^0.0.14-next.2",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.0",
     "@types/react": "^18.0.33",
@@ -79,9 +64,6 @@
     "rollup": "^3.20.2",
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
-    "sass": "^1.61.0",
-    "storybook": "^7.0.2",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4"
   }

@@ -1,90 +1,225 @@
-# React component library template/boilerplate
+# React Query Factory Documentation
 
-Template and quick-starter to create your own modern React library includes awesome features and bandled using Rollup. 
+## Introduction
 
-*Note: At date of writing this (April 2023), since the [create-react-library](https://github.com/transitive-bullshit/create-react-library) tool is no longer actively maintained (https://github.com/transitive-bullshit/create-react-library#readme) then I thought about creating this boilerplate to help bootstrap a modern react library with some nice features*
+The `react-query-factory` library provides a streamlined and type-safe approach to organizing your API layer in React applications when using TanStack's React Query. By simply providing a "service" object to the `createQueriesFromService` function, developers can generate a fully typesafe queries object, reducing boilerplate and enhancing code clarity and maintainability.
 
-## Note
-*This repository created for:*
-1. Help to bootstrap your own react library with some nice features and 
-without bothering with configuration and saving time.
-2. Learning purposes (especially how to bundle complicated things with Rollup). 
+## Getting Started
 
-## Intro
-- This boilerplate uses [Rollup](https://rollupjs.org/) as a bundler https://rollupjs.org/
+### Installation
 
-*As mentioned in [readme of create-react-library](https://github.com/transitive-bullshit/create-react-library#readme) there are some others tools(you can use it as a bundler) as an alternative to Rollup like [tsup](https://github.com/egoist/tsup), [tsdx](https://github.com/jaredpalmer/tsdx), or [microbundle](https://github.com/developit/microbundle).*
+To begin using `react-query-factory`, you must first ensure that `@tanstack/react-query` is installed and set up in your project as it is a peer dependency. If not, you can install it using npm or yarn:
 
-see also this artice https://transitivebullsh.it/javascript-dev-tools-in-2022#823feddaa1bb4edea19042852b0a5b54
-
-
-## Features
-- [Rollup](https://rollupjs.org/) for bundling
-- Bundles `commonjs` and `es` module formats
-- [Jest](https://facebook.github.io/jest/) & [React Testing Library](https://testing-library.com/)  : For testing our components
-- Support for [TypeScript](https://www.typescriptlang.org/)
-- Sourcemap creation
-- Support of CSS/SASS: For exporting components with style
-- [Storybook](https://storybook.js.org/): For testing our components within the library itself as we design them
-- Supports complicated peer-dependencies (example here is [Antd](https://ant.design/) so here the power of rollup-plugin-peer-deps-external we can use complicated peer dependency such Antd without having it bundled as a part of your module.)
-- Optimizing bundle size: [@rollup/plugin-terser](https://www.npmjs.com/package/@rollup/plugin-terser) A Rollup plugin to generate a minified bundle with terser.
-- Automatically externalize peerDependencies in a rollup bundle, thanks to [rollup-plugin-peer-deps-external](https://www.npmjs.com/package/rollup-plugin-peer-deps-external)
-- Eslint
-- Deploy Storybook to GitHub Pages
-## Getting started
-
-- Copy over the template by cloning this repository and install its dependencies:
-
-```bash
-git clone https://github.com/MidoAhmed/rollup-react-library-starter.git
-cd rollup-react-library-starter
-npm install
-```
-### Development:
-
-- Storybook:
-    - Storybook gives you an easy way to see and use your components while working on them in your library project, without having to build an unnecessary testing page just to display them.
-
-        ```bash
-        npm run storybook # runs the host Storybook application locally for quick and easy testing
-        ```
-Now, anytime you make a change to your library or the stories, the storybook will live-reload your local dev server so you can iterate on your component in real-time.
-
-- Rollup watch and build:
-
-    - for Local development run rollup to watch your src/ module and automatically recompile it into dist/ whenever you make changes.
-
-        ```bash
-        npm run dev # runs rollup with watch flag
-        ```
-
-### Scripts:
-- `npm run build` : builds the library to `dist`
-- `npm run dev`  : builds the library, then keeps rebuilding it whenever the source files change.
-- `npm test` : tests the library and show the coverage.
-- `npm run lint` : runs eslint.
-- `npm run storybook` : runs the host Storybook application locally for quick and easy testing
-- `npm run build-storybook` : builds a static HTML/JS bundle that can easily be hosted on a remote server, so all members of your team can try your components.
-- `npm run deploy-storybook` : build & deploy the storybook to GitHub Pages
-
-### Publishing to npm:
-publish to GitHub Packages registry:
-- you need to have this in your ~/.npmrc
-```bash
-registry=https://registry.npmjs.org/
-@YOUR_GITHUB_USERNAME:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_AUTH_TOKEN
-```
-and run:
-```bash
-npm publish
+```sh
+npm install @tanstack/react-query
 ```
 
+or
+
+```sh
+yarn add @tanstack/react-query
+```
+
+Once React Query is installed, you can proceed to install `react-query-factory`:
+
+```sh
+npm install react-query-factory
+```
+
+or
+
+```sh
+yarn add react-query-factory
+```
+
+### Basic Usage
+
+1. **Define a Service Object**: Start by defining a service object that includes methods for your API calls. Each method should return a promise resolving to the data you wish to fetch or mutate.
+
+   ```typescript
+   // Example service object
+   const productService = {
+     async getProducts(): Promise<Product[]> {
+       // Implementation for fetching products
+     },
+     async getProductById(id: string): Promise<Product> {
+       // Implementation for fetching a single product by ID
+     },
+     async createProduct(productData: Omit<Partial<Product>, 'id'>): Promise<Product> {
+       // Implementation for creating a new product
+     },
+   };
+   ```
+
+2. **Generate Queries and Mutations**: Use `createQueriesFromService` to generate query and mutation hooks from your service object.
+
+   ```typescript
+   import { createQueriesFromService } from 'react-query-factory';
+
+   const queries = createQueriesFromService(productService, 'products');
+   ```
+
+   Besides a service object `createQueriesFromService`, accepts `queryKeyPrefix` as a second argument. This is required so we can automatically generate `queryKey` for every query.
+
+3. **Use Generated Hooks in Components**: You can now use the generated query and mutation hooks in your components.
+
+   ```typescript
+   import React from 'react';
+
+   const ProductList = () => {
+     const { data, isLoading, error } = queries.getProducts.useQuery();
+     const { mutate } = queries.createProduct.useMutation();
+
+     if (isLoading) return <div>Loading...</div>;
+     if (error) return <div>An error occurred: {error.message}</div>;
+
+     return (
+       <ul>
+         {data?.map(product => (
+           <li key={product.id}>{product.name}</li>
+         ))}
+       </ul>
+     );
+   };
+   ```
+
+## Generating Query Keys with `react-query-factory`
+
+With `react-query-factory`, query keys are generated automatically based on the service method names and parameters. Keys are coupled to queries itself so you don't have to manage them at all.
+
+#### Default Query Keys
+
+By default, `createQueriesFromService` generates query keys using the following pattern:
+
+```javascript
+[queryKeyPrefix, methodName, ...methodParams];
+```
+
+- `queryKeyPrefix`: A string you provide when generating queries and mutations, acting as a namespace for your keys.
+- `methodName`: The name of the service method used for the query or mutation.
+- `methodParams`: Parameters passed to the query or mutation, ensuring uniqueness for different parameter values.
+
+### Example: Using Query Keys
+
+Consider a scenario where you have a query to fetch a product by its ID. The query key might be generated as follows:
+
+```javascript
+const productQueryKey = queries.products.getById.queryKey({ id: '2' });
+```
+
+This generates a query key like `['products', 'getById', { id: '2' }]`, uniquely identifying the query within the React Query cache.
+
+### Utilizing Query Keys in Components
+
+Query keys can be used directly in your components for various purposes, such as manually invalidating or refetching queries. Here's an example of how you might use a query key in a component:
+
+```javascript
+function Index() {
+  const queryClient = useQueryClient();
+
+  const product = queryClient.getQueryData(queries.products.getById.queryKey({ id: '2' }));
+
+  return <div>{/* Render your product details */}</div>;
+}
+```
+
+In this example, `queries.products.getById.queryKey({ id: '2' })` generates the query key used to fetch the product details. This key can also be used for cache management tasks, such as invalidating the query to force a refetch if the product data changes.
+
+Understanding and using query keys effectively allows you to manage and optimize the caching behavior of your queries and mutations, ensuring your application remains fast, responsive, and efficient.
+
+## Advanced Usage
+
+### Handling Parameters
+
+For service methods that require parameters, `react-query-factory` automatically generates hooks that accept these parameters and include them in the query key to ensure correct caching and invalidation. All cases are covered.
+
+#### useQuery without params
+
+If your service function doesn't accept params, you are able to pass `options` to the `useQuery` like normal. With the exception of `queryKey` and `queryFn` params.
+
+```tsx
+const { data } = queries.products.getAll.useQuery();
+//or
+const { data } = queries.products.getAll.useQuery({
+    enabled: true,
+    refetchInterval: 6000,
+    ...
+  });
+```
+
+#### useQuery with params
+
+If your service function accepts params, you are able to pass `params` and `options` arguments to the `useQuery` hook.
+
+```tsx
+const { data } = queries.products.getById.useQuery({id: "123"});
+//or
+const { data } = queries.products.getById.useQuery({id: "123"}, {
+    enabled: true,
+    refetchInterval: 6000,
+    ...
+  });
+//or if params are optional but you still want to pass options
+const { data } = queries.products.getById.useQuery(undefined, {
+    enabled: true,
+    refetchInterval: 6000,
+    ...
+  });
+```
+
+#### useMutation without params
+
+If your service function doesn't accept params, you are still able to pass `options` argument:
+
+```tsx
+const { mutate } = queries.products.createProduct.useMutation();
+//or
+const { mutate } = queries.products.createProduct.useMutation({ onSuccess: () => alert('on mutation success') });
+
+mutate(); // doesn't require any params, no TS error
+```
+
+#### useMutation with params
+
+If your service function accepts params, you are able to pass `params` to `mutate` function and `options` arguments to the `useMutation` hook.
+
+```tsx
+const { mutate } = queries.products.createProduct.useMutation();
+mutate({name: "iPhone pro", image: "xyz.com/img.jpg", ... })
+mutate() // Will throw TS error
+//or
+const { mutate } = queries.products.createProduct.useMutation({ enabled: false, ... });
+```
+
+### Centralized API layer
+
+It's suggested that you have one object which encapsulates all of the queries. For example:
+
+```tsx
+const postsService = { getPosts, createPosts, getPostById };
+const productService = { getProducts, addProductToCard, getProductById };
+const postsQueries = createQueriesFromService(postsService, "posts");
+const productsQueries = createQueriesFromService(productService, "products");
+
+const queries = { posts: postsQueries, products: productsQueries };
+
+const Foo = () => {
+	const { data } = queries.products.getProducts.useQuery()
+	...
+}
+```
+
+This way your API layer is centralized in `queries` object, so next developer doesn’t have to second guess names like `productService`, since they can rely on autocomplete to offer them suggestions by typing `queries.`.
 
 
-## Tutorials and inspirations used to create this boilerplate 
-- big thanks to this tuto and his author : https://dev.to/alexeagleson/how-to-create-and-publish-a-react-component-library-2oe#adding-scss
+### Type Safety
+
+`react-query-factory` leverages TypeScript for full type safety, ensuring that your service methods, parameters, and return types are correctly typed. This reduces runtime errors and improves the developer experience.
+
+## Contributing
+
+Contributions to `react-query-factory` are welcome. Whether it's feature requests, bug reports, or pull requests, your input helps make this library better for everyone.
 
 ## License
 
-[MIT](LICENSE).
+`react-query-factory` is open-source software licensed under the MIT license.
