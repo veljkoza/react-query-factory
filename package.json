@@ -1,6 +1,6 @@
 {
   "name": "react-query-factory",
-  "version": "0.0.40",
+  "version": "0.1.0",
   "description": "Create API client for your React app with just one line of code, using React Query!",
   "main": "dist/cjs/bundle.js",
   "module": "dist/esm/bundle.js",
